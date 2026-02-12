@@ -301,7 +301,11 @@ python scr/06_Visualizacion_Resultados.py
 
 ### 1. Resumen General
 
-Este proyecto implementa un pipeline completo de aprendizaje no supervisado para la segmentacion de transacciones de e-commerce. El flujo abarca desde la carga y exploracion de datos crudos hasta la generacion de perfiles de clientes, pasando por preprocesamiento, clustering, reduccion de dimensionalidad y visualizacion comparativa. Todo el desarrollo se organizo en 6 scripts independientes ejecutados secuencialmente, donde cada etapa consume los artefactos generados por la anterior.
+Este proyecto implementa un pipeline de aprendizaje no supervisado para la segmentacion de transacciones de e-commerce
+
+El flujo considera desde la carga y exploracion de datos crudos hasta la generacion de perfiles de clientes, pasando por preprocesamiento, clustering, reduccion de dimensionalidad y visualizacion comparativa
+
+Todo el desarrollo se organizo en 6 scripts independientes que deben de ser ejecutados secuencialmente, donde cada etapa consume los artefactos generados por la anterior.
 
 ### 2. Datos de Entrada
 
