@@ -1,0 +1,104 @@
+ETAPA 4: IMPLEMENTACION DE MODELOS DE CLUSTERING
+==================================================
+==================================================
+  CARGA DE FEATURES ESCALADAS
+==================================================
+  Dimensiones: (51282, 6)
+  Features: ['Sales', 'Quantity', 'Discount', 'Profit', 'Shipping_Cost', 'Aging']
+==================================================
+
+  METODO DEL CODO (ELBOW METHOD)
+==================================================
+  K= 2  ->  Inercia = 177801.20
+  K= 3  ->  Inercia = 153192.90
+  K= 4  ->  Inercia = 134088.02
+  K= 5  ->  Inercia = 120269.83
+  K= 6  ->  Inercia = 106631.13
+  K= 7  ->  Inercia = 98273.53
+  K= 8  ->  Inercia = 89496.77
+  K= 9  ->  Inercia = 82625.02
+  K=10  ->  Inercia = 78011.74
+==================================================
+
+  ANALISIS DE SILUETA (SILHOUETTE)
+==================================================
+  K= 2  ->  Silhouette = 0.3812 <-- MEJOR
+  K= 3  ->  Silhouette = 0.2864
+  K= 4  ->  Silhouette = 0.2324
+  K= 5  ->  Silhouette = 0.2225
+  K= 6  ->  Silhouette = 0.2327
+  K= 7  ->  Silhouette = 0.2373
+  K= 8  ->  Silhouette = 0.2325
+  K= 9  ->  Silhouette = 0.2375
+  K=10  ->  Silhouette = 0.2372
+
+  K optimo seleccionado: 2
+==================================================
+
+  MODELO K-MEANS ENTRENADO
+==================================================
+  Numero de clusters: 2
+  Inercia: 177801.20
+  Silhouette Score: 0.3795
+  Calinski-Harabasz Index: 37462.07
+  Davies-Bouldin Index: 1.1241
+
+  Tamanio de clusters:
+------------------------------
+    Cluster 0:  28853 (56.3%)
+    Cluster 1:  22429 (43.7%)
+
+  Modelo guardado en: C:\Users\gonza\Desktop\UEES\2025 Maestria AI\2025\Aprendizaje Automatico\GitHub\AA_MaestriaUEES_Semana3\Models\kmeans_model.pkl
+==================================================
+
+  OPTIMIZACION DE DBSCAN
+==================================================
+  Mejor eps: 0.7
+  Mejor min_samples: 20
+  Mejor Silhouette: -0.0411
+
+  Top 5 combinaciones:
+--------------------------------------------------
+ eps  min_samples  n_clusters  n_noise  pct_noise  silhouette
+0.70           20           9      311       3.11   -0.041054
+0.75           20           9      106       1.06   -0.043465
+0.70           15          10      147       1.47   -0.049013
+0.75           15           8       35       0.35   -0.064348
+0.75            7           7        2       0.02   -0.086046
+==================================================
+
+  MODELO DBSCAN ENTRENADO
+==================================================
+  Parametros: eps=0.7, min_samples=20
+  Clusters encontrados: 8
+  Puntos de ruido: 5 (0.0%)
+  Silhouette Score (sin ruido): -0.1020
+  Calinski-Harabasz Index: 2800.66
+  Davies-Bouldin Index: 3.8298
+
+  Tamanio de clusters:
+------------------------------
+    Ruido       :      5 (0.0%)
+    Cluster 0   :   7404 (14.4%)
+    Cluster 1   :   4996 (9.7%)
+    Cluster 2   :   7206 (14.1%)
+    Cluster 3   :  12250 (23.9%)
+    Cluster 4   :   8993 (17.5%)
+    Cluster 5   :   9913 (19.3%)
+    Cluster 6   :    206 (0.4%)
+    Cluster 7   :    309 (0.6%)
+
+  Modelo guardado en: C:\Users\gonza\Desktop\UEES\2025 Maestria AI\2025\Aprendizaje Automatico\GitHub\AA_MaestriaUEES_Semana3\Models\dbscan_model.pkl
+==================================================
+
+  COMPARACION DE MODELOS
+==================================================
+
+  Metrica                             K-means       DBSCAN
+--------------------------------------------------------
+  Num. clusters                             2            8
+  Silhouette Score                     0.3795      -0.1020
+  Calinski-Harabasz                  37462.07      2800.66
+  Davies-Bouldin                       1.1241       3.8298
+  Puntos de ruido                           0            5
+==================================================

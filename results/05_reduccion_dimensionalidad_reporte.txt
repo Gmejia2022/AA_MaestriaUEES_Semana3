@@ -1,0 +1,35 @@
+ETAPA 5: REDUCCION DE DIMENSIONALIDAD
+==================================================
+==================================================
+  CARGA DE DATOS PARA REDUCCION DE DIMENSIONALIDAD
+==================================================
+  Features: (51282, 6)
+  Etiquetas cargadas: kmeans_cluster, dbscan_cluster
+==================================================
+
+  PCA - REDUCCION A 2 COMPONENTES
+==================================================
+  Varianza explicada PC1: 0.4834 (48.34%)
+  Varianza explicada PC2: 0.1821 (18.21%)
+  Varianza acumulada:     0.6655 (66.55%)
+
+  Modelo guardado en: C:\Users\gonza\Desktop\UEES\2025 Maestria AI\2025\Aprendizaje Automatico\GitHub\AA_MaestriaUEES_Semana3\Models\pca_model.pkl
+==================================================
+
+  ANALISIS DE VARIANZA PCA (TODOS LOS COMPONENTES)
+==================================================
+  PC1: 0.4834 (48.34%)  |  Acumulada: 0.4834 (48.34%)
+  PC2: 0.1821 (18.21%)  |  Acumulada: 0.6655 (66.55%)
+  PC3: 0.1675 (16.75%)  |  Acumulada: 0.8330 (83.30%)
+  PC4: 0.1515 (15.15%)  |  Acumulada: 0.9845 (98.45%)
+  PC5: 0.0155 (1.55%)  |  Acumulada: 1.0000 (100.00%)
+  PC6: 0.0000 (0.00%)  |  Acumulada: 1.0000 (100.00%)
+==================================================
+
+  t-SNE - REDUCCION A 2 COMPONENTES
+==================================================
+  Parametros: perplexity=30, max_iter=1000, learning_rate=auto
+  Tiempo de ejecucion: 589.0 segundos
+  KL Divergence: 0.6109
+  Dimensiones resultado: (51282, 2)
+==================================================

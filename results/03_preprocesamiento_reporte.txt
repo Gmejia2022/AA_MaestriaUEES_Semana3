@@ -1,0 +1,66 @@
+ETAPA 3: PREPROCESAMIENTO DE DATOS
+==================================================
+==================================================
+  CARGA DEL DATASET LIMPIO
+==================================================
+  Filas:    51282
+  Columnas: 10
+  Nombres:  ['Aging', 'Gender', 'Customer_Login_type', 'Sales', 'Quantity', 'Discount', 'Profit', 'Shipping_Cost', 'Order_Priority', 'Payment_method']
+==================================================
+
+  CODIFICACION DE VARIABLES CATEGORICAS
+==================================================
+
+  Gender -> Gender_enc:
+------------------------------
+    Female                         -> 0
+    Male                           -> 1
+
+  Customer_Login_type -> Login_enc:
+------------------------------
+    First SignUp                   -> 0
+    Guest                          -> 1
+    Member                         -> 2
+    New                            -> 3
+
+  Payment_method -> Payment_enc:
+------------------------------
+    credit_card                    -> 0
+    debit_card                     -> 1
+    e_wallet                       -> 2
+    money_order                    -> 3
+    not_defined                    -> 4
+
+  Order_Priority -> Priority_enc:
+------------------------------
+    Critical                       -> 0
+    High                           -> 1
+    Low                            -> 2
+    Medium                         -> 3
+
+==================================================
+
+  SELECCION DE FEATURES
+==================================================
+  Features numericas (primarias): ['Sales', 'Quantity', 'Discount', 'Profit', 'Shipping_Cost', 'Aging']
+  Dimensiones: (51282, 6)
+
+  Features extendidas (num + cat codificadas): ['Sales', 'Quantity', 'Discount', 'Profit', 'Shipping_Cost', 'Aging', 'Gender_enc', 'Login_enc', 'Payment_enc', 'Priority_enc']
+  Dimensiones: (51282, 10)
+==================================================
+
+  ESCALAMIENTO DE FEATURES (StandardScaler)
+==================================================
+
+  Features numericas escaladas:
+------------------------------
+      Feature  Media_original  Std_original  Media_escalada  Std_escalada
+        Sales        152.3374       66.4918             0.0           1.0
+     Quantity          2.5030        1.5118             0.0           1.0
+     Discount          0.3038        0.1310            -0.0           1.0
+       Profit         70.4018       48.7277            -0.0           1.0
+Shipping_Cost          7.0412        4.8716             0.0           1.0
+        Aging          5.2552        2.9600             0.0           1.0
+
+  Scaler guardado en: c:\Users\gonza\Desktop\UEES\2025 Maestria AI\2025\Aprendizaje Automatico\GitHub\AA_MaestriaUEES_Semana3\Models\standard_scaler.pkl
+==================================================

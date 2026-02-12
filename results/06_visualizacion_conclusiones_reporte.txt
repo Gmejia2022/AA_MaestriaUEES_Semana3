@@ -1,0 +1,76 @@
+ETAPA 6: VISUALIZACION DE RESULTADOS Y CONCLUSIONES
+==================================================
+
+  PERFILES DE CLUSTER - K-MEANS
+==================================================
+          Sales  Quantity  Discount  Profit  Shipping_Cost  Aging  Count   Pct
+Cluster                                                                       
+0         98.96      2.49      0.29   30.83           3.09   5.31  28853  56.3
+1        221.00      2.52      0.32  121.31          12.13   5.18  22429  43.7
+==================================================
+
+  PERFILES DE CLUSTER - DBSCAN
+==================================================
+          Sales  Quantity  Discount  Profit  Shipping_Cost  Aging  Count   Pct
+Cluster                                                                       
+-1       230.20      4.00       0.5  137.02          13.70   8.80      5   0.0
+ 0        97.04      2.56       0.3   29.95           2.99   5.51   7404  14.4
+ 1       221.86      2.59       0.3  118.91          11.89   5.50   4996   9.7
+ 2       154.14      2.36       0.1   77.12           7.72   5.43   7206  14.1
+ 3       144.22      2.49       0.2   68.27           6.83   5.46  12250  23.9
+ 4       165.69      2.52       0.5   73.34           7.34   4.69   8993  17.5
+ 5       159.65      2.60       0.4   71.44           7.14   5.07   9913  19.3
+ 6        64.87      1.00       0.5   64.87           6.49   4.72    206   0.4
+ 7        66.75      1.00       0.4   66.75           6.67   5.39    309   0.6
+==================================================
+
+  REFLEXION Y CONCLUSIONES
+==================================================
+
+  1. TIPOS DE PERFILES IDENTIFICADOS
+--------------------------------------------------
+
+  Cluster 0:
+    - Sales bajo (99.0 vs media 152.3)
+    - Profit bajo (30.8 vs media 70.4)
+    - Shipping_Cost bajo (3.1 vs media 7.0)
+
+  Cluster 1:
+    - Sales alto (221.0 vs media 152.3)
+    - Profit alto (121.3 vs media 70.4)
+    - Shipping_Cost alto (12.1 vs media 7.0)
+
+
+  2. DIFERENCIAS CLAVE ENTRE K-MEANS Y DBSCAN
+--------------------------------------------------
+  - K-means identifico 2 clusters, asignando TODOS los puntos a un cluster.
+  - DBSCAN identifico 8 clusters, con 5 puntos de ruido (0.0%).
+  - K-means asume clusters esfericos de tamanio similar.
+  - DBSCAN detecta clusters de forma arbitraria y densidad variable.
+  - K-means requiere especificar K a priori; DBSCAN lo determina automaticamente.
+  - DBSCAN es mas robusto a outliers al clasificarlos como ruido.
+
+
+  3. LIMITACIONES ENCONTRADAS Y PROPUESTAS DE SOLUCION
+--------------------------------------------------
+  a) Datos a nivel de transaccion, no de cliente:
+     - Cada fila es una orden, no un cliente unico.
+     - Solucion: agregar datos por Customer_Id antes de clustering.
+
+  b) Variables temporales no aprovechadas:
+     - Order_Date y Time se eliminaron, pero podrian revelar patrones estacionales.
+     - Solucion: crear features derivadas (mes, dia de semana, hora).
+
+  c) Maldicion de la dimensionalidad en DBSCAN:
+     - Con 6 dimensiones, la nocion de densidad se diluye.
+     - Solucion: aplicar PCA antes de DBSCAN para reducir dimensiones.
+
+  d) Sensibilidad de DBSCAN a sus parametros:
+     - Pequenos cambios en eps generan resultados muy diferentes.
+     - Solucion: usar OPTICS como alternativa mas robusta.
+
+  e) Ausencia de validacion externa:
+     - No existe ground truth para evaluar la calidad real de los clusters.
+     - Solucion: validar con expertos del dominio de negocio.
+
+==================================================
