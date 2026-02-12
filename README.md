@@ -127,7 +127,7 @@ Implementacion de K-means y DBSCAN con optimizacion de parametros:
 
 Reduccion del espacio de 6 dimensiones a 2D para visualizacion.
 
-**Nota sobre el orden del pipeline:** La reduccion de dimensionalidad se ejecuta *despues* del clustering de forma intencional. PCA y t-SNE se utilizan aqui como herramientas de **visualizacion**, no como preprocesamiento. El clustering (Etapa 4) se realiza sobre el espacio completo de 6 dimensiones escaladas para aprovechar toda la informacion disponible. Si se hiciera clustering sobre PCA 2D, se perderia un tercio de la varianza (PCA 2D captura solo el 66.5%). Una vez obtenidas las etiquetas de cluster, PCA y t-SNE proyectan los datos a 2D para poder graficar y colorear los puntos segun su cluster asignado.
+**Nota sobre el orden del pipeline:** La reduccion de dimensionalidad se ejecuta *despues* del clustering de forma intencional. PCA y t-SNE se utilizan aqui como herramientas de **visualizacion**, no como preprocesamiento. El clustering (Etapa 4) se realiza sobre el espacio completo de 6 dimensiones escaladas para aprovechar toda la informacion disponible, si se hiciera clustering sobre PCA 2D, se perderia un tercio de la varianza (PCA 2D captura solo el 66.5%), una vez obtenidas las etiquetas de cluster, PCA y t-SNE proyectan los datos a 2D para poder graficar y colorear los puntos segun su cluster asignado.
 
 - **PCA:** Reduccion lineal. PC1 captura 48.3% y PC2 captura 18.2% de la varianza (66.5% acumulada). Con 4 componentes se alcanza el 98.5%.
 - **t-SNE:** Reduccion no lineal con perplexity=30 y max_iter=1000. Tiempo de ejecucion: ~10 minutos en 51,282 puntos.
@@ -155,10 +155,10 @@ Generacion de graficos comparativos, tablas de perfiles por cluster y reflexion 
 #### Interpretacion de graficos comparativos
 
 **PCA - Clusters K-means vs DBSCAN** ([06_pca_clusters_comparacion.png](results/06_pca_clusters_comparacion.png)):
-En la proyeccion PCA, K-means divide los datos en 2 zonas a lo largo del eje PC1 (componente principal que captura el 48.3% de la varianza). La separacion es clara pero lineal: los puntos azul claro (Cluster 0, bajo valor) se concentran a la izquierda y los verdes (Cluster 1, alto valor) a la derecha. En contraste, DBSCAN con 8 clusters muestra una fragmentacion mas granular del mismo espacio, donde los colores se distribuyen en bandas verticales que sugieren que DBSCAN segmenta por rangos de PC1 (dominado por Sales y Profit).
+En la proyeccion PCA, K-means divide los datos en 2 zonas a lo largo del eje PC1 (componente principal que captura el 48.3% de la varianza), la separacion es clara pero lineal: los puntos azul claro (Cluster 0, bajo valor) se concentran a la izquierda y los verdes (Cluster 1, alto valor) a la derecha. En contraste, DBSCAN con 8 clusters muestra una fragmentacion mas granular del mismo espacio, donde los colores se distribuyen en bandas verticales que sugieren que DBSCAN segmenta por rangos de PC1 (dominado por Sales y Profit).
 
 **t-SNE - Clusters K-means vs DBSCAN** ([06_tsne_clusters_comparacion.png](results/06_tsne_clusters_comparacion.png)):
-t-SNE revela la estructura no lineal de los datos formando pequenos grupos densos distribuidos en un patron circular. Con K-means, los 2 clusters se mezclan visualmente en t-SNE porque la separacion lineal de K-means no se alinea con la estructura local que detecta t-SNE. Con DBSCAN, los 8 clusters se mapean a regiones espaciales mas coherentes en t-SNE: cada color ocupa una zona definida del espacio, lo que indica que DBSCAN captura mejor las agrupaciones locales de densidad que t-SNE tambien detecta.
+t-SNE revela la estructura no lineal de los datos formando pequenos grupos densos distribuidos en un patron circular, con K-means, los 2 clusters se mezclan visualmente en t-SNE porque la separacion lineal de K-means no se alinea con la estructura local que detecta t-SNE. Con DBSCAN, los 8 clusters se mapean a regiones espaciales mas coherentes en t-SNE: cada color ocupa una zona definida del espacio, lo que indica que DBSCAN captura mejor las agrupaciones locales de densidad que t-SNE tambien detecta.
 
 **Panel comparativo 4 paneles** ([06_comparacion_modelos_4panel.png](results/06_comparacion_modelos_4panel.png)):
 Este panel 2x2 permite comparar directamente ambos modelos en ambas proyecciones. La observacion clave es que K-means funciona mejor con PCA (separacion clara en componentes lineales) mientras que DBSCAN se alinea mejor con t-SNE (agrupaciones locales de densidad). Esto refleja la naturaleza de cada algoritmo: K-means minimiza distancias euclidianas (lineal), DBSCAN detecta regiones densas (no lineal).
@@ -240,6 +240,63 @@ python scr/06_Visualizacion_Resultados.py
 
 ---
 
+## Galeria de Resultados (PNG)
+
+### Etapa 2 - EDA
+
+**Distribuciones Numericas**
+![Distribuciones Numericas](results/02_distribuciones_numericas.png)
+
+**Boxplots Numericas**
+![Boxplots Numericas](results/02_boxplots_numericas.png)
+
+**Distribuciones Categoricas**
+![Distribuciones Categoricas](results/02_distribuciones_categoricas.png)
+
+**Matriz de Correlacion**
+![Matriz de Correlacion](results/02_matriz_correlacion.png)
+
+### Etapa 4 - Clustering
+
+**Metodo del Codo (Elbow)**
+![Metodo del Codo](results/04_elbow_method.png)
+
+**Silhouette Scores**
+![Silhouette Scores](results/04_silhouette_scores.png)
+
+**K-distance para DBSCAN**
+![K-distance DBSCAN](results/04_kdistance_dbscan.png)
+
+### Etapa 5 - Reduccion de Dimensionalidad (Galeria)
+
+**Varianza Explicada PCA**
+![Varianza Explicada PCA](results/05_pca_varianza_explicada.png)
+
+### Etapa 6 - Visualizacion y Comparacion
+
+**PCA - Clusters K-means vs DBSCAN**
+![PCA Clusters Comparacion](results/06_pca_clusters_comparacion.png)
+
+**t-SNE - Clusters K-means vs DBSCAN**
+![t-SNE Clusters Comparacion](results/06_tsne_clusters_comparacion.png)
+
+**Panel Comparativo 4 Paneles**
+![Comparacion Modelos 4 Paneles](results/06_comparacion_modelos_4panel.png)
+
+**Heatmap de Perfiles K-means**
+![Heatmap Perfiles K-means](results/06_heatmap_perfiles_kmeans.png)
+
+**Heatmap de Perfiles DBSCAN**
+![Heatmap Perfiles DBSCAN](results/06_heatmap_perfiles_dbscan.png)
+
+**Distribucion de Tamanio de Clusters**
+![Distribucion de Clusters](results/06_distribucion_clusters.png)
+
+**Boxplots por Cluster K-means**
+![Boxplots por Cluster K-means](results/06_boxplots_por_cluster_kmeans.png)
+
+---
+
 ## Memoria Tecnica
 
 ### 1. Resumen General
@@ -248,15 +305,15 @@ Este proyecto implementa un pipeline completo de aprendizaje no supervisado para
 
 ### 2. Datos de Entrada
 
-| Aspecto                | Detalle                                              |
-| ---------------------- | ---------------------------------------------------- |
-| Archivo fuente         | `Data/E-commerce Dataset.csv`                        |
-| Registros originales   | 51,290 transacciones                                 |
-| Columnas originales    | 16                                                   |
-| Valores nulos          | 8 filas (0.016% del total)                           |
-| Tratamiento de nulos   | Eliminacion directa (porcentaje despreciable)        |
-| Registros finales      | 51,282 transacciones                                 |
-| Columnas conservadas   | 10 (6 numericas + 4 categoricas)                     |
+| Aspecto                | Detalle                                                                   |
+| ---------------------- | ------------------------------------------------------------------------- |
+| Archivo fuente         | `Data/E-commerce Dataset.csv`                                             |
+| Registros originales   | 51,290 transacciones                                                      |
+| Columnas originales    | 16                                                                        |
+| Valores nulos          | 8 filas (0.016% del total)                                                |
+| Tratamiento de nulos   | Eliminacion directa (porcentaje despreciable)                             |
+| Registros finales      | 51,282 transacciones                                                      |
+| Columnas conservadas   | 10 (6 numericas + 4 categoricas)                                          |
 | Columnas eliminadas    | 6 (Order_Date, Time, Customer_Id, Product, Product_Category, Device_Type) |
 
 ### 3. Flujo de Datos (Pipeline)
@@ -302,7 +359,7 @@ coordenadas_pca.csv + coordenadas_tsne.csv
 | StandardScaler (no MinMaxScaler)         | Centra en media 0 y desviacion 1, requerido para K-means y DBSCAN basados en distancia                    |
 | 6 features numericas para clustering     | Sales, Quantity, Discount, Profit, Shipping_Cost, Aging: variables con mayor poder discriminante           |
 | Muestra de 10,000 puntos para DBSCAN     | Grid search y Silhouette sobre 51K filas resultaba computacionalmente inviable (timeout)                   |
-| Clustering antes de reduccion dimensional| PCA 2D captura solo 66.5% de varianza; clustering en 6D preserva toda la informacion                      |
+| Clustering antes de reduccion dimensional | PCA 2D captura solo 66.5% de varianza; clustering en 6D preserva toda la informacion                      |
 | random_state=42 en todos los modelos     | Garantiza reproducibilidad completa de resultados                                                          |
 
 ### 5. Resultados Clave de los Modelos
@@ -365,7 +422,7 @@ coordenadas_pca.csv + coordenadas_tsne.csv
 
 | Componente       | Version/Detalle              |
 | ---------------- | ---------------------------- |
-| Python           | 3.x                         |
+| Python           | 3.x                          |
 | pandas           | Manejo de DataFrames         |
 | numpy            | Operaciones numericas        |
 | matplotlib       | Graficos base                |
