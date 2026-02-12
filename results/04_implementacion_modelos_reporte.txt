@@ -48,7 +48,7 @@ ETAPA 4: IMPLEMENTACION DE MODELOS DE CLUSTERING
     Cluster 0:  28853 (56.3%)
     Cluster 1:  22429 (43.7%)
 
-  Modelo guardado en: C:\Users\gonza\Desktop\UEES\2025 Maestria AI\2025\Aprendizaje Automatico\GitHub\AA_MaestriaUEES_Semana3\Models\kmeans_model.pkl
+  Modelo guardado en: c:\Users\gonza\Desktop\UEES\2025 Maestria AI\2025\Aprendizaje Automatico\GitHub\AA_MaestriaUEES_Semana3\Models\kmeans_model.pkl
 ==================================================
 
   OPTIMIZACION DE DBSCAN
@@ -88,7 +88,7 @@ ETAPA 4: IMPLEMENTACION DE MODELOS DE CLUSTERING
     Cluster 6   :    206 (0.4%)
     Cluster 7   :    309 (0.6%)
 
-  Modelo guardado en: C:\Users\gonza\Desktop\UEES\2025 Maestria AI\2025\Aprendizaje Automatico\GitHub\AA_MaestriaUEES_Semana3\Models\dbscan_model.pkl
+  Modelo guardado en: c:\Users\gonza\Desktop\UEES\2025 Maestria AI\2025\Aprendizaje Automatico\GitHub\AA_MaestriaUEES_Semana3\Models\dbscan_model.pkl
 ==================================================
 
   COMPARACION DE MODELOS

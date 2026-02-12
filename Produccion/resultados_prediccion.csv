@@ -1,0 +1,9 @@
+id,nota,Sales,Quantity,Discount,Profit,Shipping_Cost,Aging,Cluster_KMeans,Cluster_DBSCAN,PCA_1,PCA_2
+TXN-001,Transaccion tipica de bajo valor,85.0,2,0.2,25.0,2.5,3,0,3,-1.632115163867979,-0.14334937024553496
+TXN-002,Transaccion tipica de alto valor,230.0,3,0.4,130.0,13.0,7,1,5,2.0610126901011636,0.20095603670598916
+TXN-003,Venta alta con descuento maximo,250.0,5,0.5,160.0,16.0,10,1,-1,2.8496018424628486,0.38471509417603705
+TXN-004,Venta minima sin descuento,33.0,1,0.1,0.5,0.1,1,0,2,-2.6068237144165023,-0.4204351817162845
+TXN-005,Transaccion de valor medio,140.0,2,0.3,60.0,6.0,5,0,0,-0.3286238748678504,-0.04197793133888111
+TXN-006,Alto volumen con bajo margen,100.0,5,0.5,10.0,1.0,2,0,4,-1.9519987010376447,2.2342530563620535
+TXN-007,Premium: alto valor y envio costoso,245.0,1,0.1,155.0,15.5,8,1,2,2.8271592626361035,-2.002841559636642
+TXN-008,Compra reciente con descuento moderado,180.0,3,0.3,90.0,9.0,1,1,1,0.7064587114267616,0.9909318248983665

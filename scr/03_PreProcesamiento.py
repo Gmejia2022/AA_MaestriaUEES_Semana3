@@ -160,10 +160,14 @@ def guardar_datos_procesados(X_num_scaled, X_ext_scaled, df, features_num, featu
     df_num.to_csv(ruta_num, index=False)
     print(f"  Features escaladas guardadas en: {ruta_num}")
 
-    # Datos preprocesados completos
+    # Datos preprocesados: eliminar columnas categoricas originales (ya codificadas)
+    categoricas_originales = ['Gender', 'Customer_Login_type', 'Payment_method', 'Order_Priority']
+    df_pre = df.drop(columns=categoricas_originales)
     ruta_pre = os.path.join(DATA_DIR, 'datos_preprocesados.csv')
-    df.to_csv(ruta_pre, index=False)
+    df_pre.to_csv(ruta_pre, index=False)
     print(f"  Datos preprocesados guardados en: {ruta_pre}")
+    print(f"  Columnas categoricas originales eliminadas: {categoricas_originales}")
+    print(f"  Columnas finales: {list(df_pre.columns)}")
 
 
 def guardar_reporte(txt_carga, txt_codificacion, txt_features, txt_escalado):

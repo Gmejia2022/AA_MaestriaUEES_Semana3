@@ -1,0 +1,100 @@
+ETAPA 7: PREDICCION EN PRODUCCION
+==================================================
+==================================================
+  CARGA DE MODELOS ENTRENADOS
+==================================================
+  scaler   <- standard_scaler.pkl
+  kmeans   <- kmeans_model.pkl
+  dbscan   <- dbscan_model.pkl
+  pca      <- pca_model.pkl
+==================================================
+
+  CARGA DE DATOS DE PRODUCCION
+==================================================
+  Archivo: datos_prueba.json
+  Transacciones: 8
+  Features esperadas: ['Sales', 'Quantity', 'Discount', 'Profit', 'Shipping_Cost', 'Aging']
+  Validacion de features: OK
+==================================================
+
+  PREDICCION CON MODELOS ENTRENADOS
+==================================================
+
+  1. Escalamiento (StandardScaler)
+------------------------------
+    Sales  Quantity  Discount    Profit  Shipping_Cost     Aging
+-1.012716 -0.332688 -0.792512 -0.931746      -0.932164 -0.761876
+ 1.168003  0.328767  0.733933  1.223088       1.223168  0.589455
+ 1.468792  1.651676  1.497156  1.838755       1.838978  1.602954
+-1.794767 -0.994142 -1.555734 -1.434540      -1.424812 -1.437542
+-0.185547 -0.332688 -0.029289 -0.213468      -0.213720 -0.086211
+-0.787125  1.651676  1.497156 -1.239579      -1.240069 -1.099709
+ 1.393595 -0.994142 -1.555734  1.736144       1.736343  0.927288
+ 0.416031  0.328767 -0.029289  0.402199       0.402089 -1.437542
+
+
+  2. Prediccion K-means
+------------------------------
+  TXN-001: Cluster 0 -> Transacciones de bajo valor (Sales~99, Profit~31, Shipping~3)
+  TXN-002: Cluster 1 -> Transacciones de alto valor (Sales~221, Profit~121, Shipping~12)
+  TXN-003: Cluster 1 -> Transacciones de alto valor (Sales~221, Profit~121, Shipping~12)
+  TXN-004: Cluster 0 -> Transacciones de bajo valor (Sales~99, Profit~31, Shipping~3)
+  TXN-005: Cluster 0 -> Transacciones de bajo valor (Sales~99, Profit~31, Shipping~3)
+  TXN-006: Cluster 0 -> Transacciones de bajo valor (Sales~99, Profit~31, Shipping~3)
+  TXN-007: Cluster 1 -> Transacciones de alto valor (Sales~221, Profit~121, Shipping~12)
+  TXN-008: Cluster 1 -> Transacciones de alto valor (Sales~221, Profit~121, Shipping~12)
+
+
+  3. Prediccion DBSCAN
+------------------------------
+  TXN-001: Cluster 3
+  TXN-002: Cluster 5
+  TXN-003: Ruido (no asignado)
+  TXN-004: Cluster 2
+  TXN-005: Cluster 0
+  TXN-006: Cluster 4
+  TXN-007: Cluster 2
+  TXN-008: Cluster 1
+
+
+  4. Proyeccion PCA (2D)
+------------------------------
+  TXN-001: PC1=-1.6321, PC2=-0.1433
+  TXN-002: PC1=2.0610, PC2=0.2010
+  TXN-003: PC1=2.8496, PC2=0.3847
+  TXN-004: PC1=-2.6068, PC2=-0.4204
+  TXN-005: PC1=-0.3286, PC2=-0.0420
+  TXN-006: PC1=-1.9520, PC2=2.2343
+  TXN-007: PC1=2.8272, PC2=-2.0028
+  TXN-008: PC1=0.7065, PC2=0.9909
+
+==================================================
+
+  RESUMEN DE PREDICCIONES
+==================================================
+     id                                   nota  Sales  Profit  Cluster_KMeans  Cluster_DBSCAN   PCA_1   PCA_2
+TXN-001       Transaccion tipica de bajo valor   85.0    25.0               0               3 -1.6321 -0.1433
+TXN-002       Transaccion tipica de alto valor  230.0   130.0               1               5  2.0610  0.2010
+TXN-003        Venta alta con descuento maximo  250.0   160.0               1              -1  2.8496  0.3847
+TXN-004             Venta minima sin descuento   33.0     0.5               0               2 -2.6068 -0.4204
+TXN-005             Transaccion de valor medio  140.0    60.0               0               0 -0.3286 -0.0420
+TXN-006           Alto volumen con bajo margen  100.0    10.0               0               4 -1.9520  2.2343
+TXN-007    Premium: alto valor y envio costoso  245.0   155.0               1               2  2.8272 -2.0028
+TXN-008 Compra reciente con descuento moderado  180.0    90.0               1               1  0.7065  0.9909
+
+
+  Distribucion K-means:
+------------------------------
+  Cluster 0: 4 transacciones -> Transacciones de bajo valor (Sales~99, Profit~31, Shipping~3)
+  Cluster 1: 4 transacciones -> Transacciones de alto valor (Sales~221, Profit~121, Shipping~12)
+
+  Distribucion DBSCAN:
+------------------------------
+  Ruido: 1 transacciones
+  Cluster 0: 1 transacciones
+  Cluster 1: 1 transacciones
+  Cluster 2: 2 transacciones
+  Cluster 3: 1 transacciones
+  Cluster 4: 1 transacciones
+  Cluster 5: 1 transacciones
+==================================================

@@ -99,11 +99,40 @@ def analisis_estadistico(df):
     numericas = df.select_dtypes(include=[np.number])
     lineas.append(numericas.describe().to_string())
 
-    # Estadisticas categoricas
+    # Columnas de alta cardinalidad que seran eliminadas (resumen breve)
+    columnas_alta_cardinalidad = ['Order_Date', 'Time', 'Customer_Id', 'Product', 'Product_Category']
+
+    lineas.append("\n\n  VARIABLES DE ALTA CARDINALIDAD (se eliminaran en preprocesamiento)")
+    lineas.append("=" * 50)
+    for col in columnas_alta_cardinalidad:
+        if col in df.columns:
+            n_unicos = df[col].nunique()
+            n_nulos = df[col].isnull().sum()
+            top_valor = df[col].value_counts().index[0]
+            top_freq = df[col].value_counts().iloc[0]
+            top_pct = top_freq / len(df) * 100
+            lineas.append(f"\n  {col}:")
+            lineas.append("-" * 30)
+            lineas.append(f"    Valores unicos: {n_unicos}")
+            lineas.append(f"    Valores nulos:  {n_nulos}")
+            lineas.append(f"    Valor mas frecuente: {top_valor} -> {top_freq} ({top_pct:.1f}%)")
+            if col == 'Order_Date':
+                lineas.append(f"    Rango: {df[col].min()} a {df[col].max()}")
+                lineas.append(f"    Motivo de exclusion: variable temporal, no aporta a segmentacion de perfiles")
+            elif col == 'Time':
+                lineas.append(f"    Motivo de exclusion: variable temporal, no aporta a segmentacion de perfiles")
+            elif col == 'Customer_Id':
+                lineas.append(f"    Motivo de exclusion: identificador unico, no es una feature")
+            elif col in ['Product', 'Product_Category']:
+                lineas.append(f"    Motivo de exclusion: alta cardinalidad ({n_unicos} valores), distorsiona clustering")
+
+    # Estadisticas categoricas (solo las de baja cardinalidad que se conservan)
     lineas.append("\n\n  ESTADISTICAS DESCRIPTIVAS - VARIABLES CATEGORICAS")
     lineas.append("=" * 50)
     categoricas = df.select_dtypes(include=['object'])
     for col in categoricas.columns:
+        if col in columnas_alta_cardinalidad:
+            continue
         lineas.append(f"\n  {col}:")
         lineas.append("-" * 30)
         conteo = df[col].value_counts()

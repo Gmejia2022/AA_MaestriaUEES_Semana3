@@ -20,7 +20,7 @@ Repositorio para la materia de **Aprendizaje Automatico** - Maestria en Intelige
 
 ## Objetivo
 
-Implementar y analizar modelos de aprendizaje no supervisado (K-means, DBSCAN, PCA y t-SNE) para segmentar perfiles de usuario o cliente en un entorno tecnologico. Visualizar resultados, comparar metodos y comunicar conclusiones de forma tecnica y visual.
+Implementar y analizar modelos de aprendizaje no supervisado (K-means, DBSCAN, PCA y t-SNE) para segmentar perfiles de usuario o cliente en un entorno tecnologico, visualizar resultados, comparar metodos y comunicar conclusiones de forma tecnica y visual.
 
 ## Contexto del Caso
 
@@ -39,9 +39,9 @@ AA_MaestriaUEES_Semana3/
 ├── Data/                  # Datasets originales e intermedios
 ├── Models/                # Modelos entrenados (.pkl)
 ├── notebooks/             # Jupyter notebooks (opcional)
+├── Produccion/            # Datos de prueba (JSON) y resultados de prediccion
 ├── results/               # Reportes (.txt), graficos (.png) y tablas (.csv)
 ├── scr/                   # Scripts de Python por etapa
-├── Alcance.txt            # Documento de alcance del proyecto
 ├── requirements.txt       # Dependencias del proyecto
 └── README.md
 ```
@@ -66,9 +66,17 @@ Verificacion de librerias instaladas (pandas, numpy, matplotlib, seaborn, scikit
 
 **Script:** [02_CargaDatos_EDA.py](scr/02_CargaDatos_EDA.py)
 
-Analisis exploratorio completo del dataset: tratamiento de valores nulos (8 filas eliminadas, 0.016%), estadisticas descriptivas de variables numericas y categoricas, visualizacion de distribuciones, analisis de correlacion e identificacion de columnas irrelevantes.
+Analisis exploratorio completo del dataset: tratamiento de valores nulos (8 filas eliminadas, 0.016%), estadisticas descriptivas de variables numericas y categoricas de baja cardinalidad, resumen breve de variables de alta cardinalidad con justificacion de exclusion, visualizacion de distribuciones, analisis de correlacion e identificacion de columnas irrelevantes.
 
-**Columnas eliminadas:** Order_Date, Time, Customer_Id, Product, Product_Category, Device_Type
+**Columnas eliminadas (alta cardinalidad / irrelevantes):**
+
+- Order_Date: variable temporal, no aporta a segmentacion de perfiles (356 fechas, rango 2018-01-01 a 2018-12-30)
+- Time: variable temporal (35,273 valores unicos)
+- Customer_Id: identificador unico, no es una feature (38,990 IDs)
+- Product: alta cardinalidad (42 productos), distorsiona clustering
+- Product_Category: alta cardinalidad (4 categorias)
+- Device_Type: baja variabilidad (2 valores: Web 92.9%, Mobile 7.1%)
+
 **Columnas conservadas:** Sales, Quantity, Discount, Profit, Shipping_Cost, Aging, Gender, Customer_Login_type, Payment_method, Order_Priority
 
 **Resultados:**
@@ -85,9 +93,10 @@ Analisis exploratorio completo del dataset: tratamiento de valores nulos (8 fila
 
 **Script:** [03_PreProcesamiento.py](scr/03_PreProcesamiento.py)
 
-Codificacion de variables categoricas con LabelEncoder (Gender, Customer_Login_type, Payment_method, Order_Priority) y escalamiento de features numericas con StandardScaler para preparar los datos para algoritmos basados en distancia.
+Codificacion de variables categoricas con LabelEncoder (Gender, Customer_Login_type, Payment_method, Order_Priority) y escalamiento de features numericas con StandardScaler para preparar los datos para algoritmos basados en distancia. Las columnas categoricas originales se reemplazan por sus versiones codificadas (Gender_enc, Login_enc, Payment_enc, Priority_enc) en el archivo de datos preprocesados.
 
 **Features principales (6):** Sales, Quantity, Discount, Profit, Shipping_Cost, Aging
+**Features codificadas (4):** Gender_enc, Login_enc, Payment_enc, Priority_enc
 
 **Resultados:**
 
@@ -187,6 +196,96 @@ Los boxplots muestran que Sales, Profit y Shipping_Cost tienen distribuciones co
 
 ---
 
+### Etapa 7 - Pruebas de Modelos en Produccion
+
+**Script:** [07_Prediccion_Produccion.py](scr/07_Prediccion_Produccion.py)
+
+Validacion de los modelos entrenados con datos nuevos simulando un entorno de produccion. El script carga los 4 modelos persistidos (StandardScaler, K-means, DBSCAN, PCA) y los aplica a transacciones definidas en un archivo JSON de entrada. Para cada transaccion, el proceso es:
+
+1. **Escalamiento** con el StandardScaler ajustado en entrenamiento
+2. **Prediccion K-means** usando `predict()` sobre los datos escalados
+3. **Prediccion DBSCAN** por proximidad a core samples del entrenamiento (DBSCAN no tiene metodo `predict` nativo; se asigna el cluster del core sample mas cercano si la distancia es menor a eps, caso contrario se clasifica como ruido)
+4. **Proyeccion PCA** a 2 dimensiones para verificar posicionamiento espacial
+
+**Datos de entrada:** [datos_prueba.json](Produccion/datos_prueba.json) - 8 transacciones de prueba con perfiles variados (bajo valor, alto valor, premium, alto volumen, valores extremos)
+
+**Estructura del archivo JSON:**
+
+```json
+{
+    "descripcion": "Texto libre describiendo el lote de datos",
+    "features": ["Sales", "Quantity", "Discount", "Profit", "Shipping_Cost", "Aging"],
+    "transacciones": [
+        {
+            "id": "TXN-001",
+            "nota": "Descripcion opcional de la transaccion",
+            "Sales": 85.0,
+            "Quantity": 2,
+            "Discount": 0.2,
+            "Profit": 25.0,
+            "Shipping_Cost": 2.5,
+            "Aging": 3
+        }
+    ]
+}
+```
+
+| Campo         | Tipo   | Requerido | Descripcion                                           | Rango valido |
+| ------------- | ------ | --------- | ----------------------------------------------------- | ------------ |
+| id            | string | No        | Identificador de la transaccion                       | Texto libre  |
+| nota          | string | No        | Descripcion o contexto de la transaccion              | Texto libre  |
+| Sales         | float  | Si        | Monto total de la venta                               | 33.0 - 250.0 |
+| Quantity      | int    | Si        | Cantidad de productos comprados                       | 1 - 5        |
+| Discount      | float  | Si        | Porcentaje de descuento aplicado                      | 0.1 - 0.5    |
+| Profit        | float  | Si        | Ganancia neta de la transaccion                       | 0.5 - 167.5  |
+| Shipping_Cost | float  | Si        | Costo de envio                                        | 0.1 - 16.8   |
+| Aging         | float  | Si        | Antiguedad del pedido en dias (procesamiento/entrega) | 1.0 - 10.5   |
+
+Los rangos validos corresponden a los valores min/max del dataset de entrenamiento. Valores fuera de estos rangos seran procesados pero pueden producir predicciones menos confiables (especialmente en DBSCAN, donde es mas probable que se clasifiquen como ruido).
+
+**Resultados de validacion:**
+
+| Transaccion | Perfil                  | Sales | Profit | K-means   | DBSCAN    |
+| ----------- | ----------------------- | ----- | ------ | --------- | --------- |
+| TXN-001     | Bajo valor tipico       | 85    | 25     | Cluster 0 | Cluster 3 |
+| TXN-002     | Alto valor tipico       | 230   | 130    | Cluster 1 | Cluster 5 |
+| TXN-003     | Venta maxima            | 250   | 160    | Cluster 1 | Ruido     |
+| TXN-004     | Venta minima            | 33    | 0.5    | Cluster 0 | Cluster 2 |
+| TXN-005     | Valor medio             | 140   | 60     | Cluster 0 | Cluster 0 |
+| TXN-006     | Alto volumen/bajo marg. | 100   | 10     | Cluster 0 | Cluster 4 |
+| TXN-007     | Premium                 | 245   | 155    | Cluster 1 | Cluster 2 |
+| TXN-008     | Reciente/moderado       | 180   | 90     | Cluster 1 | Cluster 1 |
+
+K-means segmenta correctamente en alto/bajo valor segun Sales y Profit. DBSCAN asigna clusters granulares y clasifica TXN-003 (valores extremos) como ruido, demostrando su sensibilidad a puntos atipicos.
+
+**Resultados:**
+
+- [resultados_prediccion.csv](Produccion/resultados_prediccion.csv) - Tabla con predicciones por transaccion
+- [reporte_produccion.txt](Produccion/reporte_produccion.txt) - Reporte detallado del proceso de prediccion
+
+**Estructura del archivo de resultados (resultados_prediccion.csv):**
+
+El archivo CSV de salida contiene las columnas originales del JSON mas las predicciones generadas por los modelos:
+
+| Columna        | Origen       | Descripcion                                                              |
+| -------------- | ------------ | ------------------------------------------------------------------------ |
+| id             | JSON entrada | Identificador de la transaccion                                          |
+| nota           | JSON entrada | Descripcion de la transaccion                                            |
+| Sales          | JSON entrada | Monto total de la venta                                                  |
+| Quantity       | JSON entrada | Cantidad de productos                                                    |
+| Discount       | JSON entrada | Porcentaje de descuento                                                  |
+| Profit         | JSON entrada | Ganancia neta                                                            |
+| Shipping_Cost  | JSON entrada | Costo de envio                                                           |
+| Aging          | JSON entrada | Antiguedad del pedido en dias                                            |
+| Cluster_KMeans | Modelo       | Cluster asignado por K-means (0=bajo valor, 1=alto valor)                |
+| Cluster_DBSCAN | Modelo       | Cluster asignado por DBSCAN (-1=ruido, 0-7=cluster identificado)         |
+| PCA_1          | Modelo       | Coordenada en el primer componente principal (48.3% de varianza)         |
+| PCA_2          | Modelo       | Coordenada en el segundo componente principal (18.2% de varianza)        |
+
+Las columnas PCA_1 y PCA_2 permiten posicionar cada transaccion nueva en el mismo espacio 2D de los graficos de la Etapa 6, facilitando la comparacion visual con los datos de entrenamiento. Valores negativos de PCA_1 corresponden a transacciones de bajo valor y valores positivos a transacciones de alto valor.
+
+---
+
 ## Reflexion y Comunicacion
 
 ### 1. Que tipo de perfiles se pueden identificar?
@@ -229,6 +328,9 @@ python scr/03_PreProcesamiento.py
 python scr/04_Implementacion_Modelos.py
 python scr/05_Reduccion_Dimensionalidad.py
 python scr/06_Visualizacion_Resultados.py
+
+# Pruebas en produccion (requiere que las etapas 1-6 se hayan ejecutado)
+python scr/07_Prediccion_Produccion.py
 ```
 
 ## Tecnologias
@@ -309,16 +411,18 @@ Todo el desarrollo se organizo en 6 scripts independientes que deben de ser ejec
 
 ### 2. Datos de Entrada
 
-| Aspecto                | Detalle                                                                   |
-| ---------------------- | ------------------------------------------------------------------------- |
-| Archivo fuente         | `Data/E-commerce Dataset.csv`                                             |
-| Registros originales   | 51,290 transacciones                                                      |
-| Columnas originales    | 16                                                                        |
-| Valores nulos          | 8 filas (0.016% del total)                                                |
-| Tratamiento de nulos   | Eliminacion directa (porcentaje despreciable)                             |
-| Registros finales      | 51,282 transacciones                                                      |
-| Columnas conservadas   | 10 (6 numericas + 4 categoricas)                                          |
-| Columnas eliminadas    | 6 (Order_Date, Time, Customer_Id, Product, Product_Category, Device_Type) |
+| Aspecto                  | Detalle                                                                      |
+| ------------------------ | ---------------------------------------------------------------------------- |
+| Archivo fuente           | `Data/E-commerce Dataset.csv`                                                |
+| Registros originales     | 51,290 transacciones                                                         |
+| Columnas originales      | 16                                                                           |
+| Valores nulos            | 8 filas (0.016% del total)                                                   |
+| Tratamiento de nulos     | Eliminacion directa (porcentaje despreciable)                                |
+| Registros finales        | 51,282 transacciones                                                         |
+| Columnas conservadas     | 10 (6 numericas + 4 categoricas)                                             |
+| Columnas eliminadas      | 6 (Order_Date, Time, Customer_Id, Product, Product_Category, Device_Type)    |
+| Preprocesamiento         | Categoricas originales reemplazadas por versiones codificadas (LabelEncoder) |
+| Features para clustering | 6 numericas escaladas (StandardScaler)                                       |
 
 ### 3. Flujo de Datos (Pipeline)
 
@@ -326,16 +430,17 @@ Todo el desarrollo se organizo en 6 scripts independientes que deben de ser ejec
 E-commerce Dataset.csv (51,290 x 16)
         |
         v
-[Etapa 2: EDA] Limpieza + eliminacion de columnas irrelevantes
+[Etapa 2: EDA] Limpieza + eliminacion de 6 columnas irrelevantes
         |
         v
-E-commerce_limpio.csv (51,282 x 10)
+E-commerce_limpio.csv (51,282 x 10: 6 num + 4 cat)
         |
         v
-[Etapa 3: Preprocesamiento] LabelEncoder + StandardScaler
+[Etapa 3: Preprocesamiento] LabelEncoder (cat -> enc) + StandardScaler
         |
         v
-features_scaled.csv (51,282 x 6)
+datos_preprocesados.csv (51,282 x 10: 6 num + 4 enc, sin cat originales)
+features_scaled.csv (51,282 x 6: solo numericas escaladas)
         |
         v
 [Etapa 4: Modelos] K-means (K=2) + DBSCAN (eps=0.7)
@@ -355,16 +460,16 @@ coordenadas_pca.csv + coordenadas_tsne.csv
 
 ### 4. Decisiones Tecnicas
 
-| Decision                                 | Justificacion                                                                                             |
-| ---------------------------------------- | --------------------------------------------------------------------------------------------------------- |
-| Eliminar filas con nulos (no imputar)    | Solo 8 de 51,290 filas afectadas (0.016%), imputar seria innecesario                                      |
-| Eliminar 6 columnas                      | Temporales (Order_Date, Time), identificadores (Customer_Id), alta cardinalidad (Product, Product_Category) y sin variabilidad informativa (Device_Type) |
-| LabelEncoder para categoricas            | One-hot encoding generaria columnas dispersas que distorsionan distancias euclidianas en clustering        |
-| StandardScaler (no MinMaxScaler)         | Centra en media 0 y desviacion 1, requerido para K-means y DBSCAN basados en distancia                    |
-| 6 features numericas para clustering     | Sales, Quantity, Discount, Profit, Shipping_Cost, Aging: variables con mayor poder discriminante           |
-| Muestra de 10,000 puntos para DBSCAN     | Grid search y Silhouette sobre 51K filas resultaba computacionalmente inviable (timeout)                   |
-| Clustering antes de reduccion dimensional | PCA 2D captura solo 66.5% de varianza; clustering en 6D preserva toda la informacion                      |
-| random_state=42 en todos los modelos     | Garantiza reproducibilidad completa de resultados                                                          |
+| Decision                                  | Justificacion                                                                          |
+| ----------------------------------------- | -------------------------------------------------------------------------------------- |
+| Eliminar filas con nulos (no imputar)     | Solo 8 de 51,290 filas afectadas (0.016%), imputar seria innecesario                   |
+| Eliminar 6 columnas                       | Columnas temporales, identificadores, alta cardinalidad y baja variabilidad            |
+| LabelEncoder para categoricas             | One-hot encoding generaria columnas dispersas que distorsionan distancias euclidianas  |
+| StandardScaler (no MinMaxScaler)          | Centra en media 0 y desviacion 1, requerido para K-means y DBSCAN basados en distancia |
+| 6 features numericas para clustering      | Sales, Quantity, Discount, Profit, Shipping_Cost, Aging: mayor poder discriminante     |
+| Muestra de 10,000 puntos para DBSCAN      | Grid search y Silhouette sobre 51K filas resultaba computacionalmente inviable         |
+| Clustering antes de reduccion dimensional | PCA 2D captura solo 66.5% de varianza; clustering en 6D preserva toda la informacion   |
+| random_state=42 en todos los modelos      | Garantiza reproducibilidad completa de resultados                                      |
 
 ### 5. Resultados Clave de los Modelos
 
@@ -403,7 +508,7 @@ coordenadas_pca.csv + coordenadas_tsne.csv
 **Datos intermedios (Data/):**
 
 - `E-commerce_limpio.csv` - Dataset limpio tras EDA
-- `datos_preprocesados.csv` - Datos con categoricas codificadas
+- `datos_preprocesados.csv` - Datos con categoricas codificadas (sin columnas originales duplicadas)
 - `features_scaled.csv` - Features escaladas para clustering
 - `etiquetas_clusters.csv` - Etiquetas K-means y DBSCAN por transaccion
 - `coordenadas_pca.csv` - Proyeccion PCA 2D
@@ -421,6 +526,12 @@ coordenadas_pca.csv + coordenadas_tsne.csv
 - 6 reportes de texto (.txt), uno por etapa
 - 13 graficos (.png): distribuciones, correlacion, elbow, silhouette, k-distance, varianza PCA, comparaciones de clusters, heatmaps, boxplots, distribucion de tamanios
 - 2 tablas de perfiles (.csv): perfiles promedio por cluster para K-means y DBSCAN
+
+**Produccion (Produccion/):**
+
+- `datos_prueba.json` - 8 transacciones de prueba en formato JSON
+- `resultados_prediccion.csv` - Predicciones K-means, DBSCAN y PCA por transaccion
+- `reporte_produccion.txt` - Reporte detallado del proceso de prediccion
 
 ### 7. Entorno de Ejecucion
 

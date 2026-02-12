@@ -1,0 +1,86 @@
+{
+    "descripcion": "Datos de prueba para validar modelos de segmentacion en produccion",
+    "features": ["Sales", "Quantity", "Discount", "Profit", "Shipping_Cost", "Aging"],
+    "transacciones": [
+        {
+            "id": "TXN-001",
+            "nota": "Transaccion tipica de bajo valor",
+            "Sales": 85.0,
+            "Quantity": 2,
+            "Discount": 0.2,
+            "Profit": 25.0,
+            "Shipping_Cost": 2.5,
+            "Aging": 3
+        },
+        {
+            "id": "TXN-002",
+            "nota": "Transaccion tipica de alto valor",
+            "Sales": 230.0,
+            "Quantity": 3,
+            "Discount": 0.4,
+            "Profit": 130.0,
+            "Shipping_Cost": 13.0,
+            "Aging": 7
+        },
+        {
+            "id": "TXN-003",
+            "nota": "Venta alta con descuento maximo",
+            "Sales": 250.0,
+            "Quantity": 5,
+            "Discount": 0.5,
+            "Profit": 160.0,
+            "Shipping_Cost": 16.0,
+            "Aging": 10
+        },
+        {
+            "id": "TXN-004",
+            "nota": "Venta minima sin descuento",
+            "Sales": 33.0,
+            "Quantity": 1,
+            "Discount": 0.1,
+            "Profit": 0.5,
+            "Shipping_Cost": 0.1,
+            "Aging": 1
+        },
+        {
+            "id": "TXN-005",
+            "nota": "Transaccion de valor medio",
+            "Sales": 140.0,
+            "Quantity": 2,
+            "Discount": 0.3,
+            "Profit": 60.0,
+            "Shipping_Cost": 6.0,
+            "Aging": 5
+        },
+        {
+            "id": "TXN-006",
+            "nota": "Alto volumen con bajo margen",
+            "Sales": 100.0,
+            "Quantity": 5,
+            "Discount": 0.5,
+            "Profit": 10.0,
+            "Shipping_Cost": 1.0,
+            "Aging": 2
+        },
+        {
+            "id": "TXN-007",
+            "nota": "Premium: alto valor y envio costoso",
+            "Sales": 245.0,
+            "Quantity": 1,
+            "Discount": 0.1,
+            "Profit": 155.0,
+            "Shipping_Cost": 15.5,
+            "Aging": 8
+        },
+        {
+            "id": "TXN-008",
+            "nota": "Compra reciente con descuento moderado",
+            "Sales": 180.0,
+            "Quantity": 3,
+            "Discount": 0.3,
+            "Profit": 90.0,
+            "Shipping_Cost": 9.0,
+            "Aging": 1
+        }
+    ]
+}

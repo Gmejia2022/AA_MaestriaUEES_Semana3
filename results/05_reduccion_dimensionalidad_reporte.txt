@@ -13,7 +13,7 @@ ETAPA 5: REDUCCION DE DIMENSIONALIDAD
   Varianza explicada PC2: 0.1821 (18.21%)
   Varianza acumulada:     0.6655 (66.55%)
 
-  Modelo guardado en: C:\Users\gonza\Desktop\UEES\2025 Maestria AI\2025\Aprendizaje Automatico\GitHub\AA_MaestriaUEES_Semana3\Models\pca_model.pkl
+  Modelo guardado en: c:\Users\gonza\Desktop\UEES\2025 Maestria AI\2025\Aprendizaje Automatico\GitHub\AA_MaestriaUEES_Semana3\Models\pca_model.pkl
 ==================================================
 
   ANALISIS DE VARIANZA PCA (TODOS LOS COMPONENTES)
@@ -29,7 +29,7 @@ ETAPA 5: REDUCCION DE DIMENSIONALIDAD
   t-SNE - REDUCCION A 2 COMPONENTES
 ==================================================
   Parametros: perplexity=30, max_iter=1000, learning_rate=auto
-  Tiempo de ejecucion: 589.0 segundos
+  Tiempo de ejecucion: 381.4 segundos
   KL Divergence: 0.6109
   Dimensiones resultado: (51282, 2)
 ==================================================
