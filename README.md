@@ -34,21 +34,21 @@ Una plataforma digital de servicios personalizados desea segmentar a sus usuario
 - **Columnas:** 16 (Order_Date, Time, Aging, Customer_Id, Gender, Device_Type, Customer_Login_type, Product_Category, Product, Sales, Quantity, Discount, Profit, Shipping_Cost, Order_Priority, Payment_method)
 
 Nombre y significado de las columnas:
--Fecha_del_pedido: Fecha en que se pidió el producto.
--Antigüedad: Tiempo transcurrido desde el día en que se pidió el producto hasta el día en que se entregó.
--ID_del_cliente: ID único creado para cada cliente.
--Género: Género del cliente.
--Tipo_de_dispositivo: Dispositivo que el cliente utiliza para realizar la transacción (web/móvil).
--Tipo_de_inicio_de_sesión_del_cliente: Tipo de inicio de sesión del cliente. Por ejemplo, Miembro, Invitado, etc.
--Categoría_del_producto: Categoría del producto
--Producto: Producto
--Ventas: Importe total de las ventas
--Cantidad: Cantidad unitaria del producto
--Descuento: Porcentaje de descuento
--Beneficio: Beneficio
--Costo_de_envío: Costo de envío
--Prioridad_del_pedido: Prioridad del pedido. Por ejemplo, crítica, alta, etc.
--Método_de_pago: Método de pago
+- Fecha_del_pedido: Fecha en que se pidió el producto.
+- Antigüedad: Tiempo transcurrido desde el día en que se pidió el producto hasta el día en que se entregó.
+- ID_del_cliente: ID único creado para cada cliente.
+- Género: Género del cliente.
+- Tipo_de_dispositivo: Dispositivo que el cliente utiliza para realizar la transacción (web/móvil).
+- Tipo_de_inicio_de_sesión_del_cliente: Tipo de inicio de sesión del cliente. Por ejemplo, Miembro, Invitado, etc.
+- Categoría_del_producto: Categoría del producto
+- Producto: Producto
+- Ventas: Importe total de las ventas
+- Cantidad: Cantidad unitaria del producto
+- Descuento: Porcentaje de descuento
+- Beneficio: Beneficio
+- Costo_de_envío: Costo de envío
+- Prioridad_del_pedido: Prioridad del pedido. Por ejemplo, crítica, alta, etc.
+- Método_de_pago: Método de pago
 
 ## Estructura del Proyecto
 
